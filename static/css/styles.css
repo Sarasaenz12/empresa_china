@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* Estilos generales y otros estilos se mantienen igual */
 body {
     min-height: 100vh;
     display: flex;
@@ -153,46 +153,117 @@ form[action*="/buscar"] .btn {
     color: white !important;
 }
 
-/* Reorganizar las categorías en una sola línea */
-.row:has([class*="col-md-6"][class*="col-lg-4"]) {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    margin: 0 -10px;
-    padding-bottom: 15px; /* Espacio para la barra de desplazamiento */
+/* =====================================================
+   SOLUCIÓN DIRECTA Y AGRESIVA PARA EL SCROLL HORIZONTAL
+   ===================================================== */
+
+/* Primero, eliminar cualquier scroll horizontal en todas las filas de productos */
+#productos,
+.productos,
+section:has(h1:contains("Todos nuestros productos")) .row,
+section:has(h2:contains("Todos nuestros productos")) .row,
+section:has(h1:contains("Algunos Productos")) .row,
+section:has(h2:contains("Algunos Productos")) .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    width: 100% !important;
 }
 
-/* Ajustar el tamaño de cada categoría para que quepa en una línea */
-.row:has([class*="col-md-6"][class*="col-lg-4"]) > [class*="col-md-6"][class*="col-lg-4"] {
-    flex: 0 0 auto;
-    width: 300px !important;
-    padding: 0 10px;
+#productos > div,
+.productos > div,
+section:has(h1:contains("Todos nuestros productos")) .row > div,
+section:has(h2:contains("Todos nuestros productos")) .row > div,
+section:has(h1:contains("Algunos Productos")) .row > div,
+section:has(h2:contains("Algunos Productos")) .row > div {
+    flex: 0 0 33.333% !important;
+    max-width: 33.333% !important;
+    width: auto !important;
 }
 
-/* Hacer las tarjetas de categoría más compactas */
-.row:has([class*="col-md-6"][class*="col-lg-4"]) .card {
-    height: auto !important;
+/* Luego, aplicar scroll horizontal SOLO a las categorías de forma más directa */
+/* IMPORTANTE: Añadimos !important a todas las propiedades para que tengan prioridad */
+#categorias,
+.categorias,
+section:has(h1:contains("Nuestras Categorías")) .row,
+section:has(h2:contains("Nuestras Categorías")) .row,
+section:has(h1:contains("Categorías")) .row,
+section:has(h2:contains("Categorías")) .row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-bottom: 15px !important;
+    white-space: nowrap !important;
 }
 
-.row:has([class*="col-md-6"][class*="col-lg-4"]) .card-img-top {
-    height: 150px !important;
+#categorias > div,
+.categorias > div,
+section:has(h1:contains("Nuestras Categorías")) .row > div,
+section:has(h2:contains("Nuestras Categorías")) .row > div,
+section:has(h1:contains("Categorías")) .row > div,
+section:has(h2:contains("Categorías")) .row > div {
+    flex: 0 0 auto !important;
+    width: 250px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
+    display: inline-block !important;
+    padding: 0 10px !important;
+    float: none !important;
 }
 
 /* Estilo para scrollbar horizontal */
-.row:has([class*="col-md-6"][class*="col-lg-4"])::-webkit-scrollbar {
-    height: 10px;
+#categorias::-webkit-scrollbar,
+.categorias::-webkit-scrollbar,
+section:has(h1:contains("Nuestras Categorías")) .row::-webkit-scrollbar,
+section:has(h2:contains("Nuestras Categorías")) .row::-webkit-scrollbar,
+section:has(h1:contains("Categorías")) .row::-webkit-scrollbar,
+section:has(h2:contains("Categorías")) .row::-webkit-scrollbar {
+    height: 10px !important;
 }
 
-.row:has([class*="col-md-6"][class*="col-lg-4"])::-webkit-scrollbar-thumb {
-    background-color: #ffc107;
-    border-radius: 4px;
+#categorias::-webkit-scrollbar-thumb,
+.categorias::-webkit-scrollbar-thumb,
+section:has(h1:contains("Nuestras Categorías")) .row::-webkit-scrollbar-thumb,
+section:has(h2:contains("Nuestras Categorías")) .row::-webkit-scrollbar-thumb,
+section:has(h1:contains("Categorías")) .row::-webkit-scrollbar-thumb,
+section:has(h2:contains("Categorías")) .row::-webkit-scrollbar-thumb {
+    background-color: #ffc107 !important;
+    border-radius: 4px !important;
 }
 
-.row:has([class*="col-md-6"][class*="col-lg-4"])::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+#categorias::-webkit-scrollbar-track,
+.categorias::-webkit-scrollbar-track,
+section:has(h1:contains("Nuestras Categorías")) .row::-webkit-scrollbar-track,
+section:has(h2:contains("Nuestras Categorías")) .row::-webkit-scrollbar-track,
+section:has(h1:contains("Categorías")) .row::-webkit-scrollbar-track,
+section:has(h2:contains("Categorías")) .row::-webkit-scrollbar-track {
+    background-color: #f1f1f1 !important;
 }
 
-/* Título de categorías centrado */
-h1.text-center.mb-5.text-primary {
-    margin-bottom: 2rem !important; /* Reducir el espacio debajo del título */
+/* Para pantallas pequeñas */
+@media (max-width: 992px) {
+    #productos > div,
+    .productos > div,
+    section:has(h1:contains("Todos nuestros productos")) .row > div,
+    section:has(h2:contains("Todos nuestros productos")) .row > div,
+    section:has(h1:contains("Algunos Productos")) .row > div,
+    section:has(h2:contains("Algunos Productos")) .row > div {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    #productos > div,
+    .productos > div,
+    section:has(h1:contains("Todos nuestros productos")) .row > div,
+    section:has(h2:contains("Todos nuestros productos")) .row > div,
+    section:has(h1:contains("Algunos Productos")) .row > div,
+    section:has(h2:contains("Algunos Productos")) .row > div {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
 }
