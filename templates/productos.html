@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if categoria %}{{ categoria.nombre }} - {% endif %}Productos - Productos de China
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if categoria %}
+    <h1 class="text-center mb-4" style="color: #ffc107;">{{ categoria.nombre }}</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('inicio') }}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('categorias') }}">Categorías</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ categoria.nombre }}</li>
+        </ol>
+    </nav>
+    {% elif search_query %}
+    <h1 class="text-center mb-4" style="color: #ffc107;">Resultados de búsqueda: "{{ search_query }}"</h1>
+    {% else %}
+    <h1 class="text-center mb-4" style="color: #ffc107;">Todos nuestros productos</h1>
+    {% endif %}
+
+    <div class="row">
+        {% if products %}
+            {% for prod in products %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    {% if prod.imagenes and prod.imagenes[0].url_imagen %}
+                    <img src="{{ url_for('static', filename=prod.imagenes[0].url_imagen) }}"
+                        class="card-img-top"
+                         alt="{{ prod.nombre }}"
+                         style="height: 150px; object-fit: contain; padding: 10px;">
+
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex justify-content-center align-items-center" style="height: 200px;">
+                        <i class="bi bi-image text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ prod.nombre }}</h5>
+                        <p class="card-text text-muted">
+                            {% if prod.descripcion %}
+                                {{ prod.descripcion|truncate(100) }}
+                            {% else %}
+                                Sin descripción disponible
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('detalle_producto', id_producto=prod.id) }}" class="btn btn-outline-warning w-100">
+                            Ver detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    {% if search_query %}
+                        No se encontraron productos que coincidan con "{{ search_query }}"
+                    {% else %}
+                        No hay productos disponibles en esta categoría
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

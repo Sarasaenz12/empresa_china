@@ -1,0 +1,198 @@
+/* Estilos generales */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #ffc107 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333 !important;
+}
+
+.nav-link {
+    color: #333 !important;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #000 !important;
+    font-weight: 500;
+}
+
+/* Cards */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    border: 1px solid #ffc107;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
+}
+
+.card-header {
+    background-color: #fff !important;
+    border-bottom: 1px solid #ffc107;
+    font-weight: 500;
+}
+
+.card-footer {
+    background-color: #fff !important;
+    border-top: 1px solid #ffc107;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #333;
+}
+
+.btn-primary:hover {
+    background-color: #ffca28;
+    border-color: #ffca28;
+    color: #333;
+}
+
+.btn-outline-primary {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+.btn-outline-primary:hover {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* Formularios */
+.form-control {
+    border: 1px solid #ffc107;
+}
+
+.form-control:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+}
+
+/* Rating (estrellas) */
+.rating label {
+    color: #ffc107;
+}
+
+/* Alertas */
+.alert {
+    border: 1px solid transparent;
+}
+
+.alert-info {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: #fff3cd;
+}
+
+.breadcrumb-item.active {
+    color: #666;
+}
+
+/* Footer */
+footer {
+    background-color: #ffc107;
+    color: #333;
+    margin-top: 50px;
+}
+
+footer h5 {
+    color: #333;
+    font-weight: 600;
+}
+
+/* Efectos hover */
+.category-icon:hover {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+/* Cambiar el color de la barra de búsqueda */
+.form-control[type="search"], .form-control-lg[type="search"] {
+    background-color: #ff9900 !important; /* Color naranja para la barra de búsqueda */
+    border-color: #ff8c00 !important;
+    color: white !important;
+}
+
+.form-control[type="search"]::placeholder, .form-control-lg[type="search"]::placeholder {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Estilo para el botón de búsqueda */
+form[action*="/buscar"] .btn {
+    background-color: #ff8c00 !important;
+    border-color: #ff8c00 !important;
+    color: white !important;
+}
+
+/* Reorganizar las categorías en una sola línea */
+.row:has([class*="col-md-6"][class*="col-lg-4"]) {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -10px;
+    padding-bottom: 15px; /* Espacio para la barra de desplazamiento */
+}
+
+/* Ajustar el tamaño de cada categoría para que quepa en una línea */
+.row:has([class*="col-md-6"][class*="col-lg-4"]) > [class*="col-md-6"][class*="col-lg-4"] {
+    flex: 0 0 auto;
+    width: 300px !important;
+    padding: 0 10px;
+}
+
+/* Hacer las tarjetas de categoría más compactas */
+.row:has([class*="col-md-6"][class*="col-lg-4"]) .card {
+    height: auto !important;
+}
+
+.row:has([class*="col-md-6"][class*="col-lg-4"]) .card-img-top {
+    height: 150px !important;
+}
+
+/* Estilo para scrollbar horizontal */
+.row:has([class*="col-md-6"][class*="col-lg-4"])::-webkit-scrollbar {
+    height: 10px;
+}
+
+.row:has([class*="col-md-6"][class*="col-lg-4"])::-webkit-scrollbar-thumb {
+    background-color: #ffc107;
+    border-radius: 4px;
+}
+
+.row:has([class*="col-md-6"][class*="col-lg-4"])::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Título de categorías centrado */
+h1.text-center.mb-5.text-primary {
+    margin-bottom: 2rem !important; /* Reducir el espacio debajo del título */
+}

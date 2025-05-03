@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ producto.nombre }} - Productos de China{% endblock %}
+
+{% block extra_css %}
+<style>
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+    .rating input {
+        display: none;
+    }
+    .rating label {
+        color: #ddd;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0 0.1rem;
+        transition: color 0.2s;
+    }
+    .rating input:checked ~ label {
+        color: #ffc107;
+    }
+    .rating label:hover,
+    .rating label:hover ~ label {
+        color: #ffc107;
+    }
+    .carousel-item img {
+        max-height: 400px;
+        object-fit: contain;
+        background-color: #f8f9fa;
+    }
+    .bg-light-yellow {
+        background-color: #fff9e6;
+    }
+    .shake {
+        animation: shake 0.5s;
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+    }
+    .btn-like {
+        color: #28a745;
+        border-color: #28a745;
+    }
+    .btn-like:hover {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-dislike {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-dislike:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('inicio') }}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('categorias') }}">Categorías</a></li>
+            {% if categories %}
+            <li class="breadcrumb-item"><a href="{{ url_for('productos_por_categoria', id_categoria=categories[0].id) }}">{{ categories[0].nombre }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ producto.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            {% if images %}
+            <div id="carouselProducto" class="carousel slide mb-4" data-bs-ride="carousel">
+                <div class="carousel-inner rounded border border-warning">
+                    {% for imagen in images %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ url_for('static', filename=imagen.url_imagen) }}" class="d-block w-100" alt="{{ imagen.descripcion or producto.nombre }}">
+
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+            {% else %}
+            <div class="bg-light d-flex justify-content-center align-items-center rounded border border-warning" style="height: 300px;">
+                <i class="bi bi-image text-warning" style="font-size: 4rem;"></i>
+            </div>
+            {% endif %}
+
+            {% if videos %}
+            <div class="mt-4 border border-warning rounded p-3">
+                <h5 class="text-warning mb-3"><i class="bi bi-play-circle"></i> Video del producto</h5>
+                <div class="ratio ratio-16x9">
+                    <iframe src="{{ videos[0].url_video }}" allowfullscreen class="rounded"></iframe>
+                </div>
+                {% if videos[0].descripcion %}
+                <p class="text-muted mt-2 mb-0"><small>{{ videos[0].descripcion }}</small></p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="text-warning mb-3">{{ producto.nombre }}</h2>
+            <p class="text-muted"><i class="bi bi-upc"></i> Referencia: {{ producto.referencia }}</p>
+
+            <div class="d-flex mb-4 gap-2">
+                <form method="POST" action="{{ url_for('agregar_like', id_producto=producto.id) }}" class="flex-grow-1">
+                    <input type="hidden" name="ciudad" value="{{ request.remote_addr }}">
+                    <button type="submit" class="btn btn-outline-success btn-like w-100">
+                        <i class="bi bi-hand-thumbs-up"></i> Me gusta ({{ likes_count }})
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('agregar_dislike', id_producto=producto.id) }}" class="flex-grow-1">
+                    <input type="hidden" name="ciudad" value="{{ request.remote_addr }}">
+                    <button type="submit" class="btn btn-outline-danger btn-dislike w-100">
+                        <i class="bi bi-hand-thumbs-down"></i> No me gusta ({{ dislikes_count }})
+                    </button>
+                </form>
+            </div>
+
+            <div class="card mb-4 border-warning">
+                <div class="card-header bg-light-yellow">
+                    <i class="bi bi-card-text"></i> Descripción
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        {% if producto.descripcion %}
+                            {{ producto.descripcion }}
+                        {% else %}
+                            <span class="text-muted">No hay descripción disponible para este producto.</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4 border-warning">
+                <div class="card-header bg-light-yellow">
+                    <i class="bi bi-file-text"></i> Ficha Técnica
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        {% if producto.ficha_tecnica %}
+                            {{ producto.ficha_tecnica }}
+                        {% else %}
+                            <span class="text-muted">No hay ficha técnica disponible para este producto.</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            {% if categories %}
+            <div class="card mb-4 border-warning">
+                <div class="card-header bg-light-yellow">
+                    <i class="bi bi-tags"></i> Categorías
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for categoria in categories %}
+                        <a href="{{ url_for('productos_por_categoria', id_categoria=categoria.id) }}" class="badge bg-warning text-dark text-decoration-none">
+                            {{ categoria.nombre }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if producto.muestras and producto.muestras[0].cantidad > 0 %}
+            <div class="alert alert-warning">
+                <i class="bi bi-box-seam"></i> Disponibles {{ producto.muestras[0].cantidad }} unidades de muestra
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-warning mb-4"><i class="bi bi-chat-square-text"></i> Reseñas</h3>
+
+            <div class="card mb-5 border-warning">
+                <div class="card-header bg-light-yellow">
+                    <i class="bi bi-pencil"></i> Deja tu reseña
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('agregar_reseña', id_producto=producto.id) }}">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Calificación</label>
+                            <div class="rating mb-2">
+                                {% for i in range(5, 0, -1) %}
+                                <input type="radio" id="star{{ i }}" name="calificacion" value="{{ i }}" {% if loop.first %}checked{% endif %}/>
+                                <label for="star{{ i }}"><i class="bi bi-star{% if loop.first %}-fill{% endif %}"></i></label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ciudad" class="form-label fw-bold">Ciudad</label>
+                            <input type="text" class="form-control" id="ciudad" name="ciudad" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comentario" class="form-label fw-bold">Tu reseña</label>
+                            <textarea class="form-control" id="comentario" name="comentario" rows="3" required placeholder="Escribe tu experiencia con este producto..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-send"></i> Enviar Reseña
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% if reviews %}
+                {% for reseña in reviews %}
+                <div class="card mb-3 border-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">
+                                {% for i in range(5) %}
+                                    {% if i < reseña.estrellas %}
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    {% else %}
+                                        <i class="bi bi-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </h5>
+                            <small class="text-muted">
+                                <i class="bi bi-geo-alt"></i> {{ reseña.ciudad }} -
+                                <i class="bi bi-clock"></i> {{ reseña.fecha.strftime('%d/%m/%Y %H:%M') }}
+                            </small>
+                        </div>
+                        <p class="card-text">{{ reseña.contenido }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay reseñas aún. Sé el primero en opinar sobre este producto.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener ciudad automáticamente
+    const ciudadField = document.getElementById('ciudad');
+    if(ciudadField && !ciudadField.value) {
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                if(data.city) {
+                    ciudadField.value = data.city;
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener ubicación:', error);
+            });
+    }
+
+    // Validación del formulario de reseñas
+    const reviewForm = document.querySelector('form[action*="/reseña"]');
+    if(reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            const stars = this.querySelector('input[name="calificacion"]:checked');
+            const comment = this.querySelector('textarea[name="comentario"]');
+            const city = this.querySelector('input[name="ciudad"]');
+            let isValid = true;
+
+            if(!stars) {
+                const ratingContainer = this.querySelector('.rating');
+                ratingContainer.classList.add('shake');
+                setTimeout(() => {
+                    ratingContainer.classList.remove('shake');
+                }, 500);
+                isValid = false;
+            }
+
+            if(!comment.value.trim()) {
+                comment.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                comment.classList.remove('is-invalid');
+            }
+
+            if(!city.value.trim()) {
+                city.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                city.classList.remove('is-invalid');
+            }
+
+            if(!isValid) {
+                e.preventDefault();
+
+                // Mostrar alerta
+                let alert = this.querySelector('.alert-danger');
+                if(!alert) {
+                    alert = document.createElement('div');
+                    alert.className = 'alert alert-danger mt-3';
+                    this.appendChild(alert);
+                }
+                alert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Por favor completa todos los campos requeridos';
+
+                setTimeout(() => {
+                    alert.remove();
+                }, 3000);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

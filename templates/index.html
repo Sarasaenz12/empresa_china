@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Productos de China{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary fw-bold">Explora Productos</h1>
+        <p class="lead text-light">Descubre nuestra selección de productos importados directamente desde China</p>
+        
+        <div class="row justify-content-center my-4">
+            <div class="col-md-8">
+                <form class="d-flex" action="{{ url_for('buscar') }}" method="GET">
+                    <input class="form-control form-control-lg me-2 bg-dark text-light border-secondary"
+                           type="search" placeholder="Buscar productos..." name="q">
+                    <button class="btn btn-primary btn-lg" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="container">
+    <h1 class="text-center mb-5 text-primary">Nuestras Categorías</h1>
+
+    <div class="row">
+        {% for categoria in categories %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-warning h-100">
+                <div class="card-img-top bg-light d-flex justify-content-center align-items-center" style="height: 200px; overflow: hidden;">
+                    {% if categoria.imagen_categoria %}
+                        <img src="{{ url_for('static', filename=categoria.imagen_categoria) }}"
+                             style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                             alt="{{ categoria.nombre }}"
+                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/categorias/default.jpg') }}';">
+                    {% else %}
+                        <i class="bi bi-box-seam text-warning" style="font-size: 4rem;"></i>
+                    {% endif %}
+                </div>
+
+                <div class="card-body">
+                    <h3 class="card-title text-center text-dark">{{ categoria.nombre }}</h3>
+                </div>
+                <div class="card-footer bg-white border-warning text-center">
+                    <a href="{{ url_for('productos_por_categoria', id_categoria=categoria.id) }}" class="btn btn-primary">
+                        Ver Productos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+    </div>
+
+    <!-- PRODUCTOS DESTACADOS -->
+    <h2 class="text-center text-primary mt-5 mb-4">Algunos Productos</h2>
+    <div class="row">
+        {% for prod in productos_destacados %}
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-warning">
+                {% if prod.imagenes and prod.imagenes[0].url_imagen %}
+                    <img src="{{ url_for('static', filename=prod.imagenes[0].url_imagen) }}"
+                         class="card-img-top"
+                         alt="{{ prod.nombre }}"
+                         style="height: 150px; object-fit: contain;">
+                {% else %}
+                    <div class="bg-light d-flex justify-content-center align-items-center" style="height: 150px;">
+                        <i class="bi bi-image text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title text-dark">{{ prod.nombre }}</h5>
+                    <p class="card-text text-muted">
+                        {{ prod.descripcion[:80] }}{% if prod.descripcion|length > 80 %}...{% endif %}
+                    </p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ url_for('detalle_producto', id_producto=prod.id) }}" class="btn btn-outline-warning w-100">
+                        Ver detalles
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{{ url_for('productos') }}" class="btn btn-outline-primary btn-lg px-4">
+            Ver todos los productos
+        </a>
+    </div>
+
+    <!-- POR QUÉ ELEGIRNOS -->
+    <section class="my-5">
+        <h2 class="text-center mb-4 text-primary">Por qué elegirnos</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="p-4">
+                    <i class="bi bi-truck text-primary fs-1 mb-3"></i>
+                    <h4>Envío Directo</h4>
+                    <p class="text-secondary">Importamos directamente desde China para ofrecerte los mejores precios.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-4">
+                    <i class="bi bi-shield-check text-primary fs-1 mb-3"></i>
+                    <h4>Calidad Garantizada</h4>
+                    <p class="text-secondary">Verificamos la calidad de todos nuestros productos antes de ponerlos a la venta.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-4">
+                    <i class="bi bi-award text-primary fs-1 mb-3"></i>
+                    <h4>Mejores Precios</h4>
+                    <p class="text-secondary">Al eliminar intermediarios, podemos ofrecerte precios competitivos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
